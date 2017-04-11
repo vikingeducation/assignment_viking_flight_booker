@@ -24,6 +24,7 @@ SELECT destination.long_name AS most_popular_destination,
 -- How many flights have round trips possible? In other words, we want the
 -- count of all airports where there exists a flight FROM that airport and
 -- a later flight TO that airport.
+-- Mine:
 SELECT COUNT(origin.id) AS round_trips
   FROM flights f1
   -- airports
@@ -36,7 +37,16 @@ SELECT COUNT(origin.id) AS round_trips
       --WHERE f2.arrival_time > f1.departure_time
   );
 
+-- VCS:
+SELECT
+  COUNT(*) AS num_round_trip_flights
+  FROM flights one
+  JOIN flights two ON one.origin_id = two.destination_id
+  WHERE one.arrival_time < two.departure_time
+;
+
 -- Find the cheapest flight that was taken by a user who only had one itinerary.
+-- Mine:
 SELECT MIN(flights.price) AS cheapest_flight
   FROM flights
   -- airports
@@ -49,13 +59,23 @@ SELECT MIN(flights.price) AS cheapest_flight
   JOIN itineraries
     ON itineraries.id = tickets.itinerary_id
   WHERE itineraries.user_id IN (
-    SELECT user_id FROM (
-      SELECT subit.user_id, COUNT(subit.user_id) AS total
-        FROM itineraries subit
-        GROUP BY subit.user_id
-        HAVING COUNT(subit.user_id) = 1
-    ) AS it
+    SELECT user_id FROM itineraries
+      GROUP BY user_id
+      HAVING COUNT(user_id) = 1
   );
+
+ -- VCS:
+ SELECT * FROM flights
+  WHERE id = (
+    SELECT flights.id FROM itineraries
+      JOIN tickets ON itineraries.id = tickets.itinerary_id
+      JOIN flights ON flights.id = tickets.flight_id
+      GROUP BY flights.id
+      HAVING COUNT(itineraries.user_id) = 1
+      ORDER BY flights.price
+      LIMIT 1
+  )
+;
 
 -- Find the average cost of a flight itinerary for users in each state in 2012.
 SELECT states.name AS state_name,
@@ -94,4 +114,3 @@ SELECT flights.*
     AND origin_state.name IN ('Oregon', 'Pennsylvania', 'Arkansas') OR
         destination_state.name IN ('Oregon', 'Pennsylvania', 'Arkansas')
   ORDER BY flights.price;
-        
