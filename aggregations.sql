@@ -34,6 +34,47 @@ ORDER BY flights.distance LIMIT 1;
 
 
 -- Find the average flight distance for every city in California
+SELECT AVG(flights.distance) AS avg_flight_distance
+FROM airports
+JOIN flights ON airports.id = flights.origin_id
+WHERE airports.state_id =
+          (  SELECT states.id
+            FROM states
+            WHERE states.name = 'California');
+
+             avg_flight_distance
+            ----------------------
+             358.4193548387096774
+            (1 row)
+
 -- Find the 3 users who spent the most money on flights in 2013
+
+SELECT users.username
+FROM users
+JOIN itineraries ON users.id=itineraries.user_id
+JOIN tickets ON tickets.itinerary_id=itineraries.id
+JOIN flights ON flights.id=tickets.flight_id
+WHERE flights.departure_time BETWEEN '2013-01-01 00:00:00' AND '2013-12-31 23:59:59'
+ORDER BY flights.price DESC
+LIMIT 3;
+
+
 -- Count all flights to OR from the city of Smithshire that did not land in Delaware
+SELECT airports.id
+FROM cities
+JOIN airports ON cities.id=airports.city_id
+WHERE airports.city_id =
+(SELECT cities.id
+FROM cities
+WHERE cities.name = 'Smithshire');
+
+
+
+
+
+
 -- Return the range of lengths of flights in the system(the maximum, and the minimum).
+SELECT MAX(flights.distance) AS max_distance,
+MIN(flights.distance) AS min_distance
+FROM flights;
+
