@@ -40,3 +40,42 @@ JOIN airports
     WHERE states.name = 'California'
     ORDER BY flights.price desc
     LIMIT 5;
+
+
+  2. flights -> itineraries -> users
+  SELECT flights.distance
+  FROM flights JOIN tickets
+    ON tickets.flight_id = flights.id
+  JOIN itineraries
+    ON tickets.itinerary_id = itineraries.id
+  JOIN users
+    ON itineraries.user_id = users.id
+  WHERE users.username = 'zora_johnson'
+  ORDER BY flights.distance
+  LIMIT 1;
+
+  3. airports -> state_id (california)
+     flights -> airports
+SELECT (SUM(distance)/COUNT(* )) AS avg
+FROM airports JOIN states
+  ON airports.state_id = states.id
+JOIN flights
+  ON flights.origin_id = airports.id
+WHERE states.name = 'California'
+LIMIT 5;
+
+4. users -> tickets -> itineraties -> flights -> .price
+SELECT SUM(flights.price) AS price, users.first_name
+FROM users JOIN itineraries
+  ON users.id = itineraries.user_id
+JOIN tickets
+  ON itineraries.id = tickets.itinerary_id
+JOIN flights
+  ON tickets.flight_id = flights.id
+GROUP BY users.first_name
+ORDER BY price desc
+LIMIT 3;
+
+5. flights -> airports -> cities
+
+SELECT flights
