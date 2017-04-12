@@ -78,4 +78,15 @@ LIMIT 3;
 
 5. flights -> airports -> cities
 
-SELECT flights
+SELECT count( * ) AS number_of_flights
+  FROM flights JOIN airports
+  ON flights.origin_id = airports.id
+  JOIN states
+  ON airports.state_id = states.id
+  JOIN cities
+  ON airports.city_id = cities.id
+  WHERE states.name <> 'Delaware'
+  AND cities.name = 'Smithshire';
+
+  6. SELECT MAX(flights.distance) AS Max_r, MIN(flights.distance) AS Min_r
+    FROM flights;
