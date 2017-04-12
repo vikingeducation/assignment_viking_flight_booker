@@ -28,4 +28,4 @@ JOIN flights
 JOIN users
   ON itineraries.user_id = users.id
 JOIN airports
-  ON 
+  ON
