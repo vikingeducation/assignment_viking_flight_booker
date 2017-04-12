@@ -92,13 +92,32 @@ JOIN tickets ON tickets.itinerary_id=itineraries.id
 JOIN flights ON flights.id=tickets.flight_id
 WHERE users.first_name='Krystel' AND users.last_name='Senger' AND flights.arrival_time > '2012-01-01 00:00:00';
 
-SELECT *
-FROM users
-JOIN itineraries ON users.id=itineraries.user_id
-WHERE users.first_name='Krystel' AND users.last_name='Senger';
+
+  (  tickets.flight_id IN
+      ( SELECT tickets.id
+        FROM tickets
+        JOIN itineraries ON tickets.itinerary_id=itineraries.id
+        WHERE tickets.itinerary_id IN
+          ( SELECT itineraries.id
+            FROM users
+            JOIN itineraries ON users.id=itineraries.user_id
+            WHERE users.first_name='Krystel' AND users.last_name='Senger'
+              --  id
+              ------
+            --   3522
+            --   3523
+            --   3524
+            --  (3 rows)
+
+          )));
 
 
-SELECT flights.destination_id
+SELECT tickets.id
 FROM flights
 JOIN tickets ON flights.id=tickets.flight_id
 WHERE flights.arrival_time > '2012-01-01 00:00:00';
+
+SELECT *
+  FROM tickets
+  JOIN flights ON tickets.flight_id = flights.id
+  WHERE
