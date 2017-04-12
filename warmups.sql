@@ -29,11 +29,22 @@ Get a list of prices of all flights whose origins are in Kochfurt Probably Inter
 
 Find a list of all Airport names and codes which connect to the airport coded LYT.
 
-  SELECT destination_id, code
-  FROM airports
-  JOIN flights ON airports.id = flights.origin_id;
-  WHERE code = 'LYT';
-
-
+  SELECT origin.long_name, origin.code AS origin_code, destination.code AS destination_code
+  FROM flights
+  JOIN airports origin ON origin.id = flights.origin_id
+  JOIN airports destination ON destination.id = flights.destination_id
+  WHERE destination.code = 'LYT';
 
 Get a list of all airports visited by user Krystel Senger after January 1, 2012. (Hint, see if you can get a list of all ticket IDs first).
+
+  SELECT first_name, last_name, origin.long_name AS "Flew out of", destination.long_name AS "Arrived into"
+  FROM users
+  JOIN itineraries ON users.id = itineraries.user_id
+  JOIN tickets ON itineraries.id = tickets.itinerary_id
+  JOIN flights ON tickets.flight_id = flights.id
+  JOIN airports origin ON origin.id = flights.origin_id
+  JOIN airports destination ON destination.id = flights.destination_id
+  WHERE first_name = 'Krystel' AND last_name = 'Senger' AND arrival_time > '2012-01-01 00:00:00.00000';
+
+
+
