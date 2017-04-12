@@ -85,3 +85,20 @@ WHERE flights.destination_id IN
      (25 rows)
 
 -- Get a list of all airports visited by user Krystel Senger after January 1, 2012. (Hint, see if you can get a list of all ticket IDs first).
+SELECT *
+FROM users
+JOIN itineraries ON users.id=itineraries.user_id
+JOIN tickets ON tickets.itinerary_id=itineraries.id
+JOIN flights ON flights.id=tickets.flight_id
+WHERE users.first_name='Krystel' AND users.last_name='Senger' AND flights.arrival_time > '2012-01-01 00:00:00';
+
+SELECT *
+FROM users
+JOIN itineraries ON users.id=itineraries.user_id
+WHERE users.first_name='Krystel' AND users.last_name='Senger';
+
+
+SELECT flights.destination_id
+FROM flights
+JOIN tickets ON flights.id=tickets.flight_id
+WHERE flights.arrival_time > '2012-01-01 00:00:00';
