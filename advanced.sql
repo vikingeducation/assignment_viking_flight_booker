@@ -80,5 +80,6 @@ SELECT states.name, AVG(price)
       -- this should give us rows for every user's tickets
       -- then separate the users out by state
       -- and give us average for each state
+   WHERE flights.arrival_time BETWEEN '2012-1-1' AND '2012-12-31'
 GROUP BY states.name
 ORDER BY states.name;
