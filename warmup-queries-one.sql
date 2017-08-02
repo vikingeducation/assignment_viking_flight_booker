@@ -65,7 +65,7 @@
 --     	  AND itineraries.created_at > make_date(2012, 1, 1)
 --   )
 
--- -- AGGREGATION -- 
+-- -- AGGREGATION --
 
 -- SELECT flights.id, price
 --   FROM flights
@@ -93,3 +93,58 @@
 --   WHERE users.username = 'jennifer'
 --   ORDER BY flights.distance
 --   LIMIT 1
+
+-- SELECT
+--     AVG(distance) as "Average Distance"
+--   FROM flights
+--   JOIN airports
+--     ON flights.origin_id = airports.id
+--   JOIN states
+--     ON airports.state_id = states.id
+--   WHERE states.name = 'California';
+
+-- SELECT
+--     cities.name as "City Name",
+--     ROUND(AVG(distance), 1) as "Average Distance (in miles)"
+--   FROM flights
+--   JOIN airports
+--     ON flights.origin_id = airports.id
+--   JOIN states
+--     ON airports.state_id = states.id
+--   JOIN cities
+--     ON airports.city_id = cities.id
+--   WHERE states.name = 'California'
+--   GROUP BY "City Name";
+
+-- SELECT
+--     users.first_name as "First Name",
+--     users.last_name as "Last Name",
+--     SUM(flights.price) as Price
+--   FROM users
+--   JOIN itineraries
+--     ON users.id = itineraries.user_id
+--   JOIN tickets
+--     ON tickets.itinerary_id = itineraries.id
+--   JOIN flights
+--     ON flights.id = tickets.flight_id
+--   GROUP BY "First Name", "Last Name"
+--   ORDER BY Price DESC
+--   LIMIT 3;
+
+SELECT
+    COUNT(*) as "Number of Flights"
+  FROM (
+    SELECT
+        destination_id
+      FROM flights
+      JOIN airports
+        ON flights.origin_id = airports.id
+      JOIN cities
+        ON cities.id = airports.city_id
+      WHERE cities.name = 'Gwendolynfort'
+  ) as subq
+  JOIN airports
+    ON airports.id = subq.destination_id
+  JOIN states
+    ON states.id = airports.state_id
+  WHERE states.name != 'Delaware';
