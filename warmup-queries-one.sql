@@ -167,7 +167,7 @@
 --     ON states.id = airports.state_id
 --   WHERE states.name != 'Delaware' OR states.name IS NULL
 
--- SELECT MAX(distance), MIN(distance), MAX(distance) - MIN(distance) 
+-- SELECT MAX(distance), MIN(distance), MAX(distance) - MIN(distance)
 --   FROM flights
 
 -- SELECT cities.name, COUNT(*) as "Destination Count"
@@ -188,3 +188,34 @@
 --   GROUP BY cities.name
 --   ORDER BY "Destination Count"
 --   LIMIT 1
+
+-- SELECT
+--     count(*) as "Round-Trip Flights from Weird Data"
+--   FROM (
+--     SELECT
+--         airports.id as airportId, flights.arrival_time, flights.destination_id as destinationId
+--       FROM airports
+--       JOIN flights
+--         ON airports.id = flights.origin_id
+--   ) as subq
+--   JOIN flights
+--     ON subq.destinationId = flights.origin_id
+--     WHERE subq.arrival_time < flights.departure_time
+--       AND flights.destination_id = subq.airportId;
+
+-- SELECT
+--     MIN(price) as "Cheapest Price"
+--   FROM flights
+--   JOIN tickets
+--     ON flights.id = tickets.flight_id
+--   JOIN itineraries
+--     ON itineraries.id = tickets.itinerary_id
+--   WHERE itineraries.user_id in (
+--     SELECT
+--         users.id
+--       FROM users
+--       JOIN itineraries
+--         ON users.id = itineraries.user_id
+--       GROUP BY users.id
+--       HAVING COUNT(*) = 1
+--   )
