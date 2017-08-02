@@ -48,3 +48,35 @@ SELECT DISTINCT player
   AND (team2 = 'GER' OR team1 = 'GER')
 
 -- 9. Show teamname and the total number of goals scored.
+SELECT teamname, COUNT(*) AS Goals
+  FROM eteam JOIN goal ON id=teamid
+  GROUP BY teamname
+  ORDER BY goals DESC
+
+-- 10. Show the stadium and the number of goals scored in each stadium.
+SELECT stadium, COUNT(*) AS Goals
+  FROM game JOIN goal ON id=matchid
+  GROUP BY stadium
+  ORDER BY goals DESC
+
+-- 11. For every match involving 'POL', show the matchid, date and the number of goals scored.
+SELECT matchid, mdate, COUNT(*) AS Goals
+  FROM game JOIN goal ON matchid = id 
+  WHERE (team1 = 'POL' OR team2 = 'POL')
+  GROUP BY matchid, mdate
+
+-- 12. For every match where 'GER' scored, show matchid, match date and the number of goals scored by 'GER'
+SELECT matchid, mdate, COUNT(*) AS Goals
+  FROM game JOIN goal ON matchid = id 
+  WHERE (teamid = 'GER')
+  GROUP BY matchid, mdate
+
+-- 13. List every match with the goals scored by each team as shown. 
+SELECT mdate,
+  team1,
+  SUM(CASE WHEN teamid=team1 THEN 1 ELSE 0 END) AS score1,
+  team2,
+  SUM(CASE WHEN teamid=team2 THEN 1 ELSE 0 END) AS score2
+  FROM game LEFT JOIN goal ON matchid = id
+  GROUP BY game.id, mdate, team1, team2
+  ORDER BY mdate, matchid, team1, team2
