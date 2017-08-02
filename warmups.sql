@@ -71,8 +71,11 @@ GROUP BY users.username
 ORDER BY totalPrice DESC
 limit 5
 
+/* this isnt finished
+limit delaware origin but destination is OKAY*/
 SELECT COUNT(flights.id)
-FROM flights JOIN airports ON (flights.destination_id = airports.id)
-JOIN states ON (airports.state_id = state.id) AS DestState
+FROM flights JOIN airports ap ON (flights.destination_id = ap.id)
 JOIN airports ON (flights.origin_id = airports.id)
-WHERE DestState.state_id != 'Delaware'
+JOIN cities ON (airports.city_id = cities.id)
+JOIN states ON (airports.state_id = states.id)
+WHERE  cities.name = 'New York' AND states.name  != 'Delaware';
