@@ -1,0 +1,15 @@
+
+
+
+
+
+
+users (id, city_id, state_id, username, first_name, last_name, email, created_at, updated_at)
+
+flights (id, origin_id, destination_id, departure_time, arrival_time, price, created_at, updated_at, airline_id, distance)
+
+airports (id, city_id, state_id, code, long_name, created_at, updated_at)
+
+itineraries (id, user_id, payment_method, created_at, updated_at)
+
+tickets (id, itinerary_id, flight_id, created_at, updated_at)
