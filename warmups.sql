@@ -30,5 +30,12 @@ WHERE airports.long_name = 'Kochview Probably International Airport'
 
 SELECT airports.long_name,
 airports.code
-FROM airports JOIN flights ON (flights.origin_id = airports.id)
-WHERE flights.destination_id = 'LYT'
+FROM airports JOIN flights ON (flights.destination_id = airports.id)
+WHERE airports.code = 'ZAM';
+
+SELECT airports.long_name
+FROM airports JOIN flights on (airports.id = flights.destination_id)
+JOIN tickets on (tickets.flight_id = flights.id)
+JOIN itineraries on (tickets.itinerary_id = itineraries.id)
+JOIN users on (itineraries.user_id = users.id)
+WHERE users.email = 'hansen.lawson@marvin.io' AND flights.departure_time >= 2012-01-01 16:10:28.273072;
