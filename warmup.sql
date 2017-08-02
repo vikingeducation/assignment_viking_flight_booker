@@ -32,11 +32,7 @@ FROM users JOIN itineraries ON user_id = users.id
 WHERE email = 'kertzmann_brandon@schmeler.biz'
 LIMIT 10;
 
----Get a list of prices of all flights whose origins are in Kochfurt Probably International Airport.
-SELECT *
-FROM airports
-WHERE long_name = 'Kochfurt Probably International Airport'
---returns nothing
+---Get a list of prices of all flights whose origins are in Brooksfurt Probably International Airport.
 
 --answer
 SELECT price, airports.long_name
@@ -45,14 +41,6 @@ WHERE airports.long_name = 'Brooksfurt Probably International Airport';
 
 
 --Find a list of all Airport names and codes which connect to the airport coded LYT
-SELECT *
-FROM airports
-WHERE code = 'NDL';
-
-SELECT long_name, code, origin_id, destination_id
-FROM flights
-JOIN airports AS destination ON flights.destination_id = destination.id
-WHERE destination.code = 'NDL';
 
 SELECT origin.long_name AS origin, origin.code AS origin_code, destination.code AS destination_code FROM flights
   JOIN airports origin ON origin.id = flights.origin_id
@@ -60,53 +48,37 @@ SELECT origin.long_name AS origin, origin.code AS origin_code, destination.code 
   WHERE destination.code = 'NDL';
 
 
-JOIN airports source ON flight.origin_id = source.id
---Get a list of all airports visited by user Krystel Senger after January 1, 2012. (Hint, see if you can get a list of all ticket IDs first).
+--Get a list of all airports visited by user Sophie McGlynn after January 1, 2012. (Hint, see if you can get a list of all ticket IDs first).
 
-CREATE TABLE tickets (
-    id integer NOT NULL,
-    itinerary_id integer,
-    flight_id integer,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone
-);
-SELECT * FROM tickets JOIN flights LIMIT 10
 
---use ticket to grab flight to grab user_id
-SELECT *
-FROM users
-JOIN tickets ON tickets.user_id = id
-JOIN itineraries ON itineraries.user_id = tickets.itinerary_id
-WHERE users.first_name = 'Krystel'
-AND users.last_name = 'Senger'
-
-SELECT *
+SELECT originAirport.long_name, destinationAirport.long_name
 FROM tickets
 JOIN itineraries ON itineraries.id = tickets.itinerary_id
 JOIN users ON itineraries.user_id = users.id
-WHERE users.first_name = 'Krystel'
-AND users.last_name = 'Senger'
+JOIN flights ON tickets.flight_id = flights.id
+JOIN airports AS originAirport ON flights.origin_id = originAirport.id
+JOIN airports AS destinationAirport ON flights.destination_id = destinationAirport.id
+WHERE users.first_name = 'Sophie'
+AND users.last_name = 'McGlynn'
+AND flights.departure_time > '2012-01-01 00:00:00';
 
+--Queries 2: Aggregation
+--Find the top 5 most expensive flights that end in California.
+SELECT price, flights.id, states.name
+FROM airports JOIN flights on flights.destination_id = airports.id
+Join states ON airports.state_id
+ = states.id
+WHERE states.name = 'California'
+ORDER BY flights.price DESC
+LIMIT 5
 
+--3: Find the shortest flight that username 'zora_johnson' took.
 
-SELECT * FROM tickets JOIN itineraries ON itineraries.user_id = tickets.itinerary_id LIMIT 10
-SELECT * FROM tickets
-SELECT * FROM flights
-SELECT * FROM users
-SELECT * FROM itineraries
---SCRAP CODE
-
-SELECT * FROM users
-WHERE username ILIKE '%kry%';
-SELECT price, airports.long_name
-FROM airports JOIN flights on flights.origin_id = airports.id
-WHERE airports.long_name = 'Brooksfurt Probably International Airport';
-
-
-SELECT *
-FROM itineraries
-LIMIT 10;
-
-SELECT *
-FROM users
-WHERE id = 427;
+SELECT flights.id, flights.distance
+FROM flights
+JOIn tickets ON flights.id = tickets.flight_id
+JOIN itineraries ON tickets.itinerary_id = itineraries.id
+JOIN users ON users.id = itineraries.user_id
+WHERE users.username = 'zora_johnson'
+ORDER BY flights.distance
+LIMIT 1;
