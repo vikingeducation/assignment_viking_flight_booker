@@ -49,10 +49,15 @@ SELECT *
 FROM airports
 WHERE code = 'NDL';
 
-SELECT long_name, code
+SELECT long_name, code, origin_id, destination_id
 FROM flights
 JOIN airports AS destination ON flights.destination_id = destination.id
 WHERE destination.code = 'NDL';
+
+SELECT origin.long_name AS origin, origin.code AS origin_code, destination.code AS destination_code FROM flights
+  JOIN airports origin ON origin.id = flights.origin_id
+  JOIN airports destination ON destination.id = flights.destination_id
+  WHERE destination.code = 'NDL';
 
 
 JOIN airports source ON flight.origin_id = source.id
