@@ -29,3 +29,12 @@ WHERE flights.destination_id = (
     WHERE code = 'ZAM' LIMIT 1
 );
 
+
+SELECT DISTINCT airports.long_name
+  FROM users JOIN itineraries ON (users.id = itineraries.id)
+  JOIN tickets ON (itineraries.id = tickets.itinerary_id)
+  JOIN flights ON (tickets.flight_id = flights.id)
+  JOIN airports ON (flights.origin_id = airports.id) OR (flights.destination_id = airports.id)
+  WHERE users.id = (SELECT id FROM users WHERE users.first_name = SPLIT_PART('Sophie McGlynn', ' ', 1)
+  AND users.last_name = SPLIT_PART('Sophie McGlynn', ' ', 2))
+  AND flights.arrival_time > '2012-01-01'::DATE ORDER BY airports.long_name;
