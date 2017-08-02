@@ -64,3 +64,21 @@ SELECT
     	)
     	  AND itineraries.created_at > make_date(2012, 1, 1)
   )
+
+-- AGGREGATION -- 
+
+SELECT flights.id, price
+  FROM flights
+  JOIN airports ON flights.destination_id = airports.id
+  JOIN states ON states.id = airports.state_id
+  WHERE states.name = 'California'
+  ORDER BY price DESC
+  LIMIT 5; -- ???
+
+SELECT users.username, MIN(flights.distance) as flight_distance
+  FROM users
+  JOIN itineraries ON users.id = itineraries.user_id
+  JOIN tickets ON tickets.itinerary_id = itineraries.id
+  JOIN flights ON flights.id = tickets.flight_id
+  WHERE users.username = 'jennifer'
+  GROUP BY users.username
