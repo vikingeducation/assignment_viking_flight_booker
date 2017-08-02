@@ -131,20 +131,60 @@
 --   ORDER BY Price DESC
 --   LIMIT 3;
 
-SELECT
-    COUNT(*) as "Number of Flights"
-  FROM (
-    SELECT
-        destination_id
-      FROM flights
-      JOIN airports
-        ON flights.origin_id = airports.id
-      JOIN cities
-        ON cities.id = airports.city_id
-      WHERE cities.name = 'Gwendolynfort'
-  ) as subq
-  JOIN airports
-    ON airports.id = subq.destination_id
-  JOIN states
-    ON states.id = airports.state_id
-  WHERE states.name != 'Delaware';
+-- SELECT
+--     airports.long_name, states.name, cities.name, flights.origin_id, flights.destination_id
+--   FROM airports
+--   JOIN flights
+--     ON flights.origin_id = airports.id
+--   JOIN states
+--     ON states.id = airports.state_id
+--   JOIN cities
+--     ON airports.city_id = cities.id
+--   WHERE flights.destination_id in (
+--     SELECT
+--         destination_id
+--       FROM flights
+--       JOIN airports
+--         ON flights.origin_id = airports.id
+--       JOIN cities
+--         ON cities.id = airports.city_id
+--       WHERE cities.name = 'Gwendolynfort'
+--   )
+--   AND states.name != 'Delaware'
+
+-- SELECT COUNT(*)
+--   FROM (SELECT
+--             destination_id
+--           FROM flights
+--           JOIN airports
+--             ON flights.origin_id = airports.id OR flights.destination_id = airports.id
+--           JOIN cities
+--             ON cities.id = airports.city_id
+--           WHERE cities.name = 'Gwendolynfort') AS subq
+--   JOIN airports
+--     ON subq.destination_id = airports.id
+--   LEFT JOIN states
+--     ON states.id = airports.state_id
+--   WHERE states.name != 'Delaware' OR states.name IS NULL
+
+-- SELECT MAX(distance), MIN(distance), MAX(distance) - MIN(distance) 
+--   FROM flights
+
+-- SELECT cities.name, COUNT(*) as "Destination Count"
+--   FROM users
+--   JOIN states
+--     ON users.state_id = states.id
+--   JOIN itineraries
+--     ON users.id = itineraries.user_id
+--   JOIN tickets
+--     ON itineraries.id = tickets.itinerary_id
+--   JOIN flights
+--     ON flights.id = tickets.flight_id
+--   JOIN airports
+--     ON flights.destination_id = airports.id
+--   JOIN cities
+--     ON cities.id = airports.city_id
+--   WHERE states.name = 'California'
+--   GROUP BY cities.name
+--   ORDER BY "Destination Count"
+--   LIMIT 1
