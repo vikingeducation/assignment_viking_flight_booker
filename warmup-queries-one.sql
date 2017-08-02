@@ -43,42 +43,53 @@
 -- 	WHERE airports.code != 'BXX';
 
 
-SELECT
-    airports.long_name as "Airport visited by this dude"
-  FROM tickets
-  JOIN flights
-    ON tickets.flight_id = flights.id
-  JOIN airports
-    ON flights.destination_id = airports.id
-  WHERE tickets.id in (
-    SELECT
-        tickets.id
-      FROM tickets
-    	JOIN itineraries on tickets.itinerary_id = itineraries.id
-    	WHERE itineraries.user_id = (
-    		  SELECT DISTINCT
-    			    id
-    				FROM users
-    				WHERE first_name = 'Percival'
-    				  AND last_name = 'Rempel'
-    	)
-    	  AND itineraries.created_at > make_date(2012, 1, 1)
-  )
+-- SELECT
+--     airports.long_name as "Airport visited by this dude"
+--   FROM tickets
+--   JOIN flights
+--     ON tickets.flight_id = flights.id
+--   JOIN airports
+--     ON flights.destination_id = airports.id
+--   WHERE tickets.id in (
+--     SELECT
+--         tickets.id
+--       FROM tickets
+--     	JOIN itineraries on tickets.itinerary_id = itineraries.id
+--     	WHERE itineraries.user_id = (
+--     		  SELECT DISTINCT
+--     			    id
+--     				FROM users
+--     				WHERE first_name = 'Percival'
+--     				  AND last_name = 'Rempel'
+--     	)
+--     	  AND itineraries.created_at > make_date(2012, 1, 1)
+--   )
 
--- AGGREGATION -- 
+-- -- AGGREGATION -- 
 
-SELECT flights.id, price
-  FROM flights
-  JOIN airports ON flights.destination_id = airports.id
-  JOIN states ON states.id = airports.state_id
-  WHERE states.name = 'California'
-  ORDER BY price DESC
-  LIMIT 5; -- ???
+-- SELECT flights.id, price
+--   FROM flights
+--   JOIN airports ON flights.destination_id = airports.id
+--   JOIN states ON states.id = airports.state_id
+--   WHERE states.name = 'California'
+--   ORDER BY price DESC
+--   LIMIT 5; -- ???
 
-SELECT users.username, MIN(flights.distance) as flight_distance
-  FROM users
-  JOIN itineraries ON users.id = itineraries.user_id
-  JOIN tickets ON tickets.itinerary_id = itineraries.id
-  JOIN flights ON flights.id = tickets.flight_id
-  WHERE users.username = 'jennifer'
-  GROUP BY users.username
+-- SELECT users.username, MIN(flights.distance) as flight_distance
+--   FROM users
+--   JOIN itineraries ON users.id = itineraries.user_id
+--   JOIN tickets ON tickets.itinerary_id = itineraries.id
+--   JOIN flights ON flights.id = tickets.flight_id
+--   WHERE users.username = 'jennifer'
+--   GROUP BY users.username
+
+--OR
+
+-- SELECT users.username, flights.id, flights.distance
+--   FROM users
+--   JOIN itineraries ON users.id = itineraries.user_id
+--   JOIN tickets ON tickets.itinerary_id = itineraries.id
+--   JOIN flights ON flights.id = tickets.flight_id
+--   WHERE users.username = 'jennifer'
+--   ORDER BY flights.distance
+--   LIMIT 1
