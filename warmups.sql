@@ -29,7 +29,7 @@ WHERE flights.destination_id = (
     WHERE code = 'ZAM' LIMIT 1
 );
 
-
+-- 6. Get a list of all airports visited by user Krystel Senger after January 1, 2012. (Hint, see if you can get a list of all ticket IDs first).
 SELECT DISTINCT airports.long_name
   FROM users JOIN itineraries ON (users.id = itineraries.id)
   JOIN tickets ON (itineraries.id = tickets.itinerary_id)
