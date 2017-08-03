@@ -4,7 +4,7 @@ CREATE TABLE tickets (
     flight_id integer,
     created_at timestamp without time zone,
     updated_at timestamp without time zone
--- );
+
 CREATE TABLE itineraries (
     id integer NOT NULL,
     user_id integer NOT NULL,
@@ -12,6 +12,7 @@ CREATE TABLE itineraries (
     created_at timestamp without time zone,
     updated_at timestamp without time zone
 );
+
 CREATE TABLE users (
     id integer NOT NULL,
     city_id integer NOT NULL,
@@ -23,7 +24,6 @@ CREATE TABLE users (
     created_at timestamp without time zone,
     updated_at timestamp without time zone
 );
-use ticket to grab flight to grab user_id
 
 CREATE TABLE flights (
     id integer NOT NULL,

@@ -79,6 +79,7 @@ FROM flights
 JOIn tickets ON flights.id = tickets.flight_id
 JOIN itineraries ON tickets.itinerary_id = itineraries.id
 JOIN users ON users.id = itineraries.user_id
-WHERE users.username = 'zora_johnson'
+WHERE users.first_name = 'Sophie'
+  AND users.last_name = 'McGlynn'
 ORDER BY flights.distance
 LIMIT 1;
