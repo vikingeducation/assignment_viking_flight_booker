@@ -121,7 +121,7 @@ SELECT id, title
              SELECT id FROM actor
              WHERE name='Julie Andrews'))
 
-SELECT name 
+SELECT name
   FROM casting JOIN actor ON casting.actorid = actor.id
   WHERE ord = 1
   GROUP BY actor.id, actor.name
@@ -134,12 +134,12 @@ SELECT title, COUNT(actorid)
   ORDER BY COUNT(actorid) DESC, title
 
 SELECT name
-  FROM movie JOIN casting ON movie.id=casting.movieid 
+  FROM movie JOIN casting ON movie.id=casting.movieid
     JOIN actor ON actor.id = casting.actorid
   WHERE movieid IN(SELECT movieid
     FROM actor JOIN casting ON id=actorid
     WHERE name = 'Art Garfunkel') AND name != 'Art Garfunkel'
-  
+
 --- SUM AND COUNT
 
 SELECT SUM(population)
@@ -159,7 +159,7 @@ SELECT COUNT(name)
 SELECT SUM(population) as "Total"
   FROM world
   WHERE name IN('Estonia', 'Latvia', 'Lithuania')
-  
+
 SELECT continent, COUNT(name)
   FROM world
   GROUP BY continent
@@ -174,7 +174,7 @@ SELECT continent
   GROUP BY continent
   HAVING SUM(population) >= 100000000
 
--- SELECT WITHIN SELECT 
+-- SELECT WITHIN SELECT
 
 SELECT name FROM world
   WHERE population >
@@ -183,7 +183,7 @@ SELECT name FROM world
 
 SELECT name
   FROM world
-  WHERE continent = 'Europe' 
+  WHERE continent = 'Europe'
     AND gdp/population > (SELECT gdp/population
       FROM world
     WHERE name = 'United Kingdom')
@@ -199,23 +199,23 @@ SELECT name, population
   FROM world
   WHERE population > (SELECT population
   FROM world
-  WHERE name = 'Canada') 
+  WHERE name = 'Canada')
   AND population < (SELECT population
   FROM world
   WHERE name = 'Poland')
 
-SELECT name, 
+SELECT name,
        CONCAT(
          ROUND(
-           population/(SELECT population 
+           population/(SELECT population
              FROM world
              WHERE name = 'Germany')*100
-         ) 
+         )
        ,'%') AS "% of GER pop"
   FROM world
   WHERE continent = 'Europe'
 
--- SELF JOIN 
+-- SELF JOIN
 
 SELECT COUNT(*)
   FROM stops
@@ -225,12 +225,29 @@ SELECT id
   WHERE name = 'Craiglockhart'
 
 SELECT id, name
-  FROM stops JOIN route ON stops.id = route.stop 
-  WHERE num = '4' AND company = 'LRT'  
+  FROM stops JOIN route ON stops.id = route.stop
+  WHERE num = '4' AND company = 'LRT'
 
 SELECT company, num, COUNT(*)
 FROM route WHERE stop=149 OR stop=53
 GROUP BY company, num
 
+SELECT a.company, a.num, a.stop, b.stop
+FROM route a JOIN route b ON
+  (a.company=b.company AND a.num=b.num)
+WHERE a.stop=53 AND b.stop=(SELECT id FROM stops WHERE name = 'London Road')
 
+SELECT a.company, a.num, stopa.name, stopb.name
+FROM route a JOIN route b ON
+  (a.company=b.company AND a.num=b.num)
+  JOIN stops stopa ON (a.stop=stopa.id)
+  JOIN stops stopb ON (b.stop=stopb.id)
+WHERE stopa.name='Craiglockhart' AND stopb.name='London Road'
 
+SELECT DISTINCT a.company, a.num
+FROM route a JOIN route b ON (a.company = b.company) AND (a.num = b.num)
+WHERE a.stop = 115 AND b.stop=137
+
+SELECT a.company, a.num
+FROM route a JOIN route b ON (a.company = b.company) AND (a.num = b.num) JOIN stops c ON (c.id = a.stop) JOIN stops d ON (d.id = b.stop)
+WHERE c.name = 'Craiglockhart' AND d.name ='Tollcross'
