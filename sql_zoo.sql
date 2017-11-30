@@ -120,3 +120,117 @@ SELECT id, title
        WHERE actorid = (
              SELECT id FROM actor
              WHERE name='Julie Andrews'))
+
+SELECT name 
+  FROM casting JOIN actor ON casting.actorid = actor.id
+  WHERE ord = 1
+  GROUP BY actor.id, actor.name
+  HAVING COUNT(*) >= 30
+
+SELECT title, COUNT(actorid)
+  FROM movie JOIN casting ON movie.id = casting.movieid
+  WHERE yr = 1978
+  GROUP BY movieid, title
+  ORDER BY COUNT(actorid) DESC, title
+
+SELECT name
+  FROM movie JOIN casting ON movie.id=casting.movieid 
+    JOIN actor ON actor.id = casting.actorid
+  WHERE movieid IN(SELECT movieid
+    FROM actor JOIN casting ON id=actorid
+    WHERE name = 'Art Garfunkel') AND name != 'Art Garfunkel'
+  
+--- SUM AND COUNT
+
+SELECT SUM(population)
+  FROM world
+
+SELECT DISTINCT continent
+  FROM world
+
+SELECT SUM(gdp)
+  FROM world
+  WHERE continent = 'Africa'
+
+SELECT COUNT(name)
+  FROM world
+  WHERE area > 1000000
+
+SELECT SUM(population) as "Total"
+  FROM world
+  WHERE name IN('Estonia', 'Latvia', 'Lithuania')
+  
+SELECT continent, COUNT(name)
+  FROM world
+  GROUP BY continent
+
+SELECT continent, COUNT(name)
+  FROM world
+  WHERE population > 10000000
+  GROUP BY continent
+
+SELECT continent
+  FROM world
+  GROUP BY continent
+  HAVING SUM(population) >= 100000000
+
+-- SELECT WITHIN SELECT 
+
+SELECT name FROM world
+  WHERE population >
+     (SELECT population FROM world
+      WHERE name='Russia')
+
+SELECT name
+  FROM world
+  WHERE continent = 'Europe' 
+    AND gdp/population > (SELECT gdp/population
+      FROM world
+    WHERE name = 'United Kingdom')
+
+SELECT name, continent
+  FROM world
+  WHERE continent IN(SELECT DISTINCT continent
+  FROM world
+  WHERE name = 'Argentina' OR name = 'Australia')
+  ORDER BY name
+
+SELECT name, population
+  FROM world
+  WHERE population > (SELECT population
+  FROM world
+  WHERE name = 'Canada') 
+  AND population < (SELECT population
+  FROM world
+  WHERE name = 'Poland')
+
+SELECT name, 
+       CONCAT(
+         ROUND(
+           population/(SELECT population 
+             FROM world
+             WHERE name = 'Germany')*100
+         ) 
+       ,'%') AS "% of GER pop"
+  FROM world
+  WHERE continent = 'Europe'
+
+-- SELF JOIN 
+
+SELECT COUNT(*)
+  FROM stops
+
+SELECT id
+  FROM stops
+  WHERE name = 'Craiglockhart'
+
+SELECT id, name
+  FROM stops JOIN route ON stops.id = route.stop 
+  WHERE num = '4' AND company = 'LRT'  
+
+SELECT company, num, COUNT(*)
+FROM route WHERE stop=149 OR stop=53
+GROUP BY company, num
+
+
+
