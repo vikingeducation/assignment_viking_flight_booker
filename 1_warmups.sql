@@ -28,4 +28,7 @@ SELECT * FROM airports WHERE code='ZAM';
 
 -- Get a list of all airports visited by user Sophie McGlynn after January 1, 2012. (Hint, see if you can get a list of all ticket IDs first).
 
-SELECT long_name FROM flights JOIN tickets ON flights.id=tickets.flight_id JOIN airports ON (origin_id = airports.id  OR destination_id = airports.id) WHERE itinerary_id = 291;
+SELECT long_name
+FROM flights JOIN tickets ON flights.id=tickets.flight_id
+JOIN airports ON (origin_id = airports.id  OR destination_id = airports.id)
+WHERE itinerary_id = 291;
