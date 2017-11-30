@@ -32,7 +32,7 @@ SELECT player
   WHERE stadium = 'National Stadium, Warsaw'
 
 SELECT DISTINCT player
-  FROM game JOIN goal ON matchid = id 
+  FROM game JOIN goal ON matchid = id
     WHERE (team1='GER' OR team2='GER')
       AND teamid != 'GER'
 
@@ -46,7 +46,7 @@ SELECT stadium, COUNT(stadium)
   GROUP BY stadium
 
 SELECT matchid, mdate, COUNT(*)
- FROM game JOIN goal ON goal.matchid = game.id 
+ FROM game JOIN goal ON goal.matchid = game.id
  WHERE (team1 = 'POL' OR team2 = 'POL')
  GROUP BY goal.matchid, game.mdate
 
@@ -63,11 +63,60 @@ SELECT mdate,
   FROM game LEFT JOIN goal ON matchid = id
   GROUP BY id, team1, team2, mdate
 
+/*MORE JOIN OPERATIONS*/
+SELECT id, title
+ FROM movie
+ WHERE yr=1962
+
+ SELECT yr
+ FROM movie
+ WHERE title='Citizen Kane'
+
+ SELECT id, title, yr
+ FROM movie
+ WHERE title LIKE '%Star Trek%'
+
+ SELECT id
+ FROM actor
+ WHERE name LIKE '%Glenn Close%'
+
+ SELECT id
+ FROM movie
+ WHERE title LIKE '%Casablanca%'
+
+ SELECT name
+  FROM casting JOIN actor ON actorid = id
+  WHERE movieid=11768
+
+  SELECT name
+ FROM casting JOIN actor ON actorid = actor.id JOIN movie ON movieid=movie.id
+ WHERE title = 'Alien'
+
+ SELECT title
+  FROM casting JOIN actor ON actorid = actor.id JOIN movie ON movieid=movie.id
+  WHERE name = 'Harrison Ford'
+
+  SELECT title
+ FROM casting JOIN actor ON actorid = actor.id JOIN movie ON movieid=movie.id
+ WHERE name = 'Harrison Ford' AND ord != '1'
 
 
+ SELECT title, name
+ FROM casting JOIN actor ON actorid = actor.id JOIN movie ON movieid=movie.id
+ WHERE ord = '1' and yr = 1962
 
+ SELECT yr,COUNT(title) FROM
+   movie JOIN casting ON movie.id=movieid
+          JOIN actor   ON actorid=actor.id
+ where name='John Travolta'
+ GROUP BY yr
+ HAVING COUNT(title)>2
 
-
-
-
-
+ SELECT title,name
+   FROM casting JOIN movie ON (movieid=movie.id)
+                 JOIN actor ON actorid=actor.id
+   WHERE ord=1 AND movie.id IN (
+       SELECT movieid FROM casting
+       WHERE actorid = (
+             SELECT id FROM actor
+             WHERE name='Julie Andrews'))
