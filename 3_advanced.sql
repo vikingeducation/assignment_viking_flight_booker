@@ -54,6 +54,7 @@ FROM flights JOIN tickets ON (tickets.flight_id = flights.id)
 JOIN itineraries ON (itineraries.id = tickets.itinerary_id)
 JOIN users ON (users.id = itineraries.user_id)
 JOIN states ON(states.id  = users.state_id)
+WHERE departure_time BETWEEN '2012-01-01 00:00:00.000000' AND '2013-01-01 00:00:00.000000'
 GROUP BY states.name
 ORDER BY states.name;
 
