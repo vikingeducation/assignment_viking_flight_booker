@@ -2,15 +2,23 @@
 
 -- Find the top 5 most expensive flights that end in California.
 
-SELECT * FROM flights JOIN states ON(states.id  = destination_id) WHERE states.name = 'California' ORDER BY price DESC limit 5;
+SELECT * 
+FROM flights 
+JOIN states ON(states.id  = destination_id) 
+WHERE states.name = 'California' 
+ORDER BY price DESC 
+LIMIT 5;
 
 -- Find the shortest flight that username 'emelia' took.
 
-SELECT * FROM flights JOIN tickets ON flights.id=tickets.flight_id WHERE itinerary_id = 291 ORDER BY (flights.arrival_time - flights.departure_time) limit 1;
+SELECT * 
+FROM flights 
+JOIN tickets ON flights.id=tickets.flight_id 
+WHERE itinerary_id = 291 
+ORDER BY (flights.arrival_time - flights.departure_time) 
+LIMIT 1;
 
 -- Find the average flight distance for every city in California
-
-SELECT * FROM airports JOIN states ON (state_id = states.id) WHERE states.name = 'California';
 
 SELECT cities.name, AVG(distance)
 FROM airports JOIN states ON (states.id  = state_id)
@@ -22,8 +30,16 @@ GROUP BY cities.name;
 -- Find the 3 users who spent the most money on flights in 2013
 
 --users.id -> itinearies.id -> tickets.flight_id -> flights.price
-
-SELECT username, price FROM users JOIN itineraries ON (users.id = itineraries.id) JOIN tickets ON (users.itinerary_id = tickets.itinerary_id) JOIN flights ON (tickets.flight_id = flights.id) GROUP BY users.username  ORDER BY sum(price) DESC  limit 3;
+/*
+SELECT username, price 
+FROM users 
+JOIN itineraries ON (users.id = itineraries.id) 
+JOIN tickets ON (users.itinerary_id = tickets.itinerary_id) 
+JOIN flights ON (tickets.flight_id = flights.id) 
+GROUP BY users.username  
+ORDER BY sum(price) DESC  
+LIMIT 3;
+*/
 
 SELECT users.username, sum(price)
 FROM flights JOIN tickets ON(flights.id = tickets.flight_id)
@@ -32,7 +48,6 @@ JOIN users ON (users.id = itineraries.user_id)
 GROUP BY users.username
 ORDER BY sum(price) DESC
 limit 3;
- SELECT * FROM cities WHERE name='Smithshire';
 
 -- Count all flights to OR from the city of Smithshire that did not land in Delaware
 
