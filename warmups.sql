@@ -29,7 +29,7 @@ WHERE airports.long_name= 'Port Gerardbury Probably International Airport';
 Find a list of all Airport names and codes which connect to the airport coded ZAM.
 
 
-SELECT 
+SELECT
 CASE WHEN origin.code='ZAM' THEN destination.long_name ELSE origin.long_name END,
 CASE WHEN origin.code='ZAM' THEN destination.code ELSE origin.code END
 FROM airports origin JOIN flights ON origin.id=flights.origin_id
@@ -43,9 +43,14 @@ Get a list of all airports visited by user Sophie McGlynn after January 1, 2012.
 (Hint, see if you can get a list of all ticket IDs first).
 
 
-SELECT origin.long_name, destination.long_name
-FROM users JOIN itineraries ON users.id=itineraries.user_id JOIN tickets
-ON itineraries.id = tickets.itinerary_id JOIN flights ON tickets.flight_id=flights.id
-JOIN airports destination ON flights.destination_id= destination.id JOIN airports origin
-ON origin.id=flights.origin_id
-WHERE users.first_name = 'Sophie' AND users.last_name='McGlynn';
+SELECT origin.long_name, destination.long_name, flights.departure_time
+FROM
+users JOIN itineraries ON users.id=itineraries.user_id
+/*itinerary_id ^^^*/
+JOIN tickets ON itineraries.id = tickets.itinerary_id
+/*finds tickets ^^^*/
+JOIN flights ON tickets.flight_id=flights.id
+/*find the flights from the tickets ^^^^*/
+JOIN airports destination ON flights.destination_id= destination.id JOIN airports origin ON origin.id=flights.origin_id
+/*find the airports from the flights*/
+WHERE users.first_name = 'Sophie' AND users.last_name='McGlynn' AND flights.departure_time > '2012-01-01'
