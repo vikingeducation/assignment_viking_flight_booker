@@ -1,9 +1,7 @@
-assignment_viking_flight_booker
+SQL_practice_with_airline_data
 ===============================
 
 Querying an example airline database
 
 
-
-
-
+Gregory Alford
